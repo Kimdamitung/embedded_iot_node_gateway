@@ -3,6 +3,9 @@
 #include <util/delay.h>
 #include <avr/io.h>	
 
+// Struct Bits LSB UART
+
+
 int main(int argc, char const *argv[]){
 	/* code */
 	DDRD |= (1 << DD6);
