@@ -53,17 +53,42 @@ void uart_send_8n1(uint8_t character){
 	TIMSK |= (1 << OCIE0A); 
 }
 
+// usart 
+
+void usart_init(unsigned int baudrate){
+	UBRRH = (unsigned char)(baudrate >> 8);
+	UBRRL = (unsigned char)baudrate;
+	/* Enable receiver and transmitter */
+	UCSRB = (1 << RXEN ) | (1 << TXEN);
+	/* Set frame format: 8data, 2stop bit */
+	UCSRC = (1 << USBS ) | (3 << UCSZ0);
+}
+
+void USART_Transmit( unsigned char data ){
+	while (!( UCSRA & (1 << UDRE)));	
+	/* Put data into buffer, sends the data */
+	UDR = data;
+}
+
+unsigned char USART_Receive(void){
+	/* Wait for data to be received */
+	while ( !(UCSRA & (1 << RXC)) );
+	/* Get and return received data from buffer */
+	return UDR;
+}
+
 int main(void){
 	/* code */
 	DDRD |= (1 << DD6);
 	uart_bitbang_init();
 	sei();
+	usart_init((unsigned int)115200);
 	while (1) {
-		PORTD |= (1 << DD6);
-		uart_send_8n1('A');
-		_delay_ms(1000);
-		PORTD &= ~(1 << DD6);
-		uart_send_8n1('F');
+		PORTD ^= (1 << DD6);
+		if (UCSRA & (1 << RXC)) {  
+            uint8_t c = USART_Receive();
+            uart_send_8n1(c);
+        }
 		_delay_ms(1000);
 	}
 	return 0;
