@@ -1,0 +1,1 @@
+./luckfox-pico/tools/linux/toolchain/arm-rockchip830-linux-uclibcgnueabihf/bin/arm-rockchip830-linux-uclibcgnueabihf-gcc ./luckfox-pico/main.c -o ./luckfox-pico/main && scp -r ./luckfox-pico/main root@192.168.100.79:/root/nguyenduytung/
