@@ -1,4 +1,4 @@
 .pio/
 .cache/
 compile_commands.json
-.luckfox-pico/tools/
+luckfox-pico/tools/
