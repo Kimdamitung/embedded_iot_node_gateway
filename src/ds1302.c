@@ -65,20 +65,20 @@ static void ds1302_reset_ch(void){
 	ds1302_write_reg(SEC, 0x00);
 }
 
-static void ds1302_set_time(time_t time){
+static void ds1302_set_time(time_t *time){
 	ds1302_write_reg(CONTROL, 0x00);
-	ds1302_write_reg(SEC, dec_covert_bcd(time.seconds & 0x7F));
-	ds1302_write_reg(MIN, dec_covert_bcd(time.minutes));
-	ds1302_write_reg(HOUR, dec_covert_bcd(time.hours));
+	ds1302_write_reg(SEC, dec_covert_bcd(time->seconds & 0x7F));
+	ds1302_write_reg(MIN, dec_covert_bcd(time->minutes));
+	ds1302_write_reg(HOUR, dec_covert_bcd(time->hours));
 	ds1302_write_reg(CONTROL, 0x80);
 }
 
-static void ds1302_set_date(date_t date){
+static void ds1302_set_date(date_t *date){
 	ds1302_write_reg(CONTROL, 0x00);
-	ds1302_write_reg(DATE, dec_covert_bcd(date.date));
-	ds1302_write_reg(DAY, dec_covert_bcd(date.day));
-	ds1302_write_reg(MONTH, dec_covert_bcd(date.month));
-	ds1302_write_reg(YEAR, dec_covert_bcd(date.year));
+	ds1302_write_reg(DATE, dec_covert_bcd(date->date));
+	ds1302_write_reg(DAY, dec_covert_bcd(date->day));
+	ds1302_write_reg(MONTH, dec_covert_bcd(date->month));
+	ds1302_write_reg(YEAR, dec_covert_bcd(date->year));
 	ds1302_write_reg(CONTROL, 0x80);
 }
 

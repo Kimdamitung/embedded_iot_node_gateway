@@ -32,8 +32,8 @@ typedef struct {
 typedef struct {
 	void (*init)(void);
 	void (*reset)(void);
-	void (*set_time)(time_t time);
-	void (*set_date)(date_t date);
+	void (*set_time)(time_t *time);
+	void (*set_date)(date_t *date);
 	time_t (*read_time)(void);
 	date_t (*read_date)(void);
 } ds1302_t;
