@@ -1,4 +1,6 @@
 #include "uart.h"
+#include <avr/interrupt.h>
+#include <stdint.h>
 
 static volatile uint8_t tx_buffer[TX_BUFFER_SIZE];
 static volatile uint8_t tx_head;
@@ -28,6 +30,11 @@ static void uart_send(uint8_t c) {
         tx_bit = 0;
 }
 
+static void uart_hex(uint8_t value){
+    char hex[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+    uart_send(hex[value >> 4]);
+    uart_send(hex[value & 0x0F]);
+}
 
 ISR(TIMER1_COMPA_vect){
     if (tx_bit == -1) 
@@ -56,5 +63,6 @@ ISR(TIMER1_COMPA_vect){
 
 const uart_t UART = {
 	.init = uart_init,
-	.send = uart_send
+	.send = uart_send,
+    .hex = uart_hex
 };
