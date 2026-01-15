@@ -77,7 +77,7 @@ This separation of communication roles ensures:
 
 The pinout below is used as a reference for wiring **USART, GPIO, HC12 RF module, debug UART, and RTC peripherals**.
 
-![Luckfox Pico GPIO Pinout](images/LUCKFOX-PICO-GPIO.jpeg)
+![Luckfox Pico GPIO Pinout](images/LUCKFOX-PICO-GPIO.jpg)
 
 ---
 
