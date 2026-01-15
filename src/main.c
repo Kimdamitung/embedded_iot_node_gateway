@@ -17,47 +17,60 @@ int main(int argc, char const *argv[]){
     sei();
     DS1302.init();
     DS1302.reset();
-    time_t *time;
-    time->hours = 17;
-    time->minutes = 8;
-    time->seconds = 0;
+    uint8_t rx_buf[12];
+    time_t time = {0};
+    package_t frame = {0};
+    frame.start = START;
+    frame.header = NODE;
+    frame.id = NONE;
+    frame.commands = (CID | CTIME);
+    frame.data[0] = NONE;
+    frame.data[1] = NONE;
+    frame.data[2] = NONE;
+    frame.data[3] = NONE;
+    frame.data[4] = NONE;
+    frame.data[5] = NONE;
+    frame.length = NONE;
+    frame.end = END;
+    HC12.send(frame);
+    for(uint8_t i = 0; i < 12; i++){
+        rx_buf[i] = (uint8_t) USART.receive();
+        UART.hex(rx_buf[i]);
+        UART.send(' ');
+    }
+    uint8_t id = rx_buf[2];
+    UART.send('\r');
+    UART.send('\n');
+    time.hours = rx_buf[6];
+    time.minutes = rx_buf[7];
+    time.seconds = rx_buf[8];
     DS1302.set_time(time);
     time_t value;
-    package_t *frame;
     while (1) {
         PORTB ^= (1 << PB0);
         PORTB ^= (1 << PB1);
         value = DS1302.read_time();
-        frame->start = START;
-        frame->header = NODE;
-        frame->id = 0x01;
-        frame->data[0] = 37;
-        frame->data[1] = 89;
-        frame->data[2] = value.hours;
-        frame->data[3] = value.minutes;
-        frame->data[4] = value.seconds;
-        frame->data[5] = 0x00;
-        frame->length = 6;
-        frame->end = END;
+        frame.start = START;
+        frame.header = NODE;
+        frame.id = id;
+        frame.commands = NONE;
+        frame.data[0] = NONE;
+        frame.data[1] = NONE;
+        frame.data[2] = value.hours;
+        frame.data[3] = value.minutes;
+        frame.data[4] = value.seconds;
+        frame.data[5] = NONE;
+        frame.length = 6;
+        frame.end = END;
         HC12.send(frame);
-        // show_and_send_ds1302(value.hours);
-        // UART.send(':');
-        // USART.transmit(':');
-        // show_and_send_ds1302(value.minutes);
-        // UART.send(':');
-        // USART.transmit(':');
-        // show_and_send_ds1302(value.seconds);
-        // UART.send('\r');
-        // UART.send('\n');
-        // USART.transmit('\n');
-        _delay_ms(1000);
+        for(uint8_t i = 0; i < 12; i++){
+            rx_buf[i] = (uint8_t) USART.receive();
+            UART.hex(rx_buf[i]);
+            UART.send(' ');
+        }
+        UART.send('\r');
+        UART.send('\n');
+        _delay_ms(2000);
     }
     return 0;
-}
-
-void  show_and_send_ds1302(uint8_t value){
-    UART.send('0' + (value / 10));
-    USART.transmit('0' + (value / 10));
-    UART.send('0' + (value % 10));
-    USART.transmit('0' + (value % 10));
 }
