@@ -73,6 +73,14 @@ This separation of communication roles ensures:
 
 ## Gateway (Luckfox Pico)
 
+### Luckfox Pico Pinout
+
+The pinout below is used as a reference for wiring **USART, GPIO, HC12 RF module, debug UART, and RTC peripherals**.
+
+![Luckfox Pico GPIO Pinout](images/LUCKFOX-PICO-GPIO.jpeg)
+
+---
+
 ### Description
 
 The Gateway is implemented on a **Luckfox Pico**, running **embedded Linux built with Buildroot**.
